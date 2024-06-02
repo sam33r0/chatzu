@@ -18,19 +18,7 @@ function Dashboard() {
     }
   )
   const f = async () => {
-    const response = await axios.post((backendUri + '/user/logout'),
-      {
-        name: "sam",
-        google: "google"
-      },
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer khgkh`
-        },
-        withCredentials: true
-      },
-    );
+    window.open((backendUri + '/user/Glogout'),"_self")
     console.log(response);
   }
   return (
