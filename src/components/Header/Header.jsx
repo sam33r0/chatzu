@@ -60,9 +60,6 @@ function Header() {
                   <DropdownMenuItem>
                     <button className="w-full h-full text-left" onClick={() => { navigate('/about') }}>About</button>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <button className="w-full h-full text-left" onClick={() => { navigate('/contact') }}>Contact Us</button>
-                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -93,7 +90,7 @@ function Header() {
               <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                 <li>
                   <NavLink
-                    to=""
+                    to="/"
                     className={({ isActive }) =>
                       `block py-2 pr-4 pl-3 duration-200
                       ${isActive ? 'text-orange-300' : 'text-white'} border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-300 lg:p-0`

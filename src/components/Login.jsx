@@ -5,24 +5,31 @@ import { Button } from "./../@/components/ui/button.jsx";
 import Logo from './Logo/Logo.jsx';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-
+import { useDispatch } from 'react-redux';
+import { login, setGoogle } from './store/authSlice';
 function Login() {
+  const dispatch= useDispatch();
   const backendUri = import.meta.env.VITE_BACKEND_URI;
   const loginWithGoogle = () => {
     window.open("http://localhost:8000/auth/google/callback", "_self");
   };
   const { register, handleSubmit, reset } = useForm();
   const [error, setError] = useState(false);
-
+  const navigate = useNavigate();
   const send = async (data) => {
     try {
-      const response = await axios.post(`${backendUri}/user/login`, data, {
+        const res = await axios.post(`${backendUri}/user/login`, data, {headers: {
+          'Content-Type': 'application/json',
+        },
         withCredentials: true,
       });
-      if (response.status === 200) {
-        navigate('/dashboard');
+      
+      if (res.status === 200) {
+        dispatch(login({ user: res.data.data.user, accessToken: res.data.data.accessToken, contacts: res.data.data.connections }));
+        navigate('/dashboard/jwt');
       }
     } catch (err) {
+      console.error(err);
       setError(true);
     }
     reset();

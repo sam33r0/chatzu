@@ -10,6 +10,7 @@ import store from './components/store/store.js'
 import { Provider } from 'react-redux'
 import Home from './components/Home.jsx'
 import About from './components/About.jsx'
+import AddContact from './components/pages/AddContact.jsx'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -28,12 +29,16 @@ const router = createBrowserRouter([
         element: <Login />
       },
       {
-        path: '/dashboard',
+        path: '/dashboard/:param',
         element: <Dashboard />
       },
       {
         path:'/about',
         element: <About/>
+      },
+      {
+        path: 'add-contact',
+        element: <AddContact/>
       }
     ]
   }]);
