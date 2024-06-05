@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Input } from "./../@/components/ui/input";
-import { Button } from "./../@/components/ui/button.jsx";
-import Logo from './Logo/Logo.jsx';
+import { Input } from "./../../@/components/ui/input";
+import { Button } from "./../../@/components/ui/button.jsx";
+import Logo from './../Logo/Logo.jsx';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { login, setGoogle } from './store/authSlice';
+import { login, setGoogle } from './../store/authSlice';
 function Login() {
   const dispatch= useDispatch();
   const backendUri = import.meta.env.VITE_BACKEND_URI;

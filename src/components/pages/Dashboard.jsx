@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
-import { login, setGoogle } from './store/authSlice.js';
+import { login, setGoogle } from '../store/authSlice.js';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Input } from './../@/components/ui/input.jsx';
+import { Input } from '../../@/components/ui/input.jsx';
 
 function Dashboard() {
   const { param } = useParams();
@@ -12,7 +12,7 @@ function Dashboard() {
   const accessToken = useSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  if (param != "oo")
+  if (param == "jwt" || param == "google")
     dispatch(setGoogle({ authGoogle: param }))
   useEffect(
     () => {
@@ -61,7 +61,7 @@ function Dashboard() {
             chat section
           </div>
           <div className='sticky bottom-0 p-4 bg-gradient-to-r from-blue-500 to-purple-700'>
-            <Input className='w-full' placeholder='Enter your message'/>
+            <Input className='w-full' placeholder='Enter your message' />
           </div>
         </div>
       </div>

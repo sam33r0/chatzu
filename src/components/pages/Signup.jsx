@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Input } from "./../@/components/ui/input.jsx";
-import { Button } from "./../@/components/ui/button.jsx";
-import Logo from './Logo/Logo.jsx';
+import { Input } from "../../@/components/ui/input.jsx";
+import { Button } from "../../@/components/ui/button.jsx";
+import Logo from '../Logo/Logo.jsx';
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 
@@ -46,7 +46,7 @@ function Signup() {
       });
 
       if (res) {
-        navigate('/dashboard');
+        navigate('/dashboard/jwt');
       }
     }
     reset();

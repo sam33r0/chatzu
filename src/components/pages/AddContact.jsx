@@ -1,5 +1,5 @@
-import { Input } from './../../@/components/ui/input.jsx';
-import { Button } from './../../@/components/ui/button.jsx';
+import { Input } from '../../@/components/ui/input.jsx';
+import { Button } from '../../@/components/ui/button.jsx';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -27,6 +27,7 @@ function AddContact() {
             if (response.status === 201) {
                 setSuccess(true);
                 setTimeout(() => { setSuccess(false) }, 2500);
+                reset()
             }
         } catch (err) {
             setErrorM(true);
@@ -43,7 +44,7 @@ function AddContact() {
                 </div>
             )}
             {errorM && (
-                <div className="mt-5 bg-red-600 text-white py-4 px-6 md:px-12 shadow-lg h-14 flex justify-center items-center">
+                <div className="bg-red-600 text-white py-4 px-6 md:px-12 shadow-lg h-14 flex justify-center items-center">
                     <h2 className="text-xl font-extrabold text-center">Unable to add Connection</h2>
                 </div>
             )}
