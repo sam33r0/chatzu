@@ -19,11 +19,11 @@ function App() {
     })
   }
   return (
-    <>
+    <div className='h-screen flex flex-col'>
       <Header />
         <Outlet />
-      <Footer />
-    </>
+      {/* <Footer /> */}
+    </div>
   )
 }
 

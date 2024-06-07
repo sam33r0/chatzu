@@ -32,7 +32,10 @@ function Home() {
                     const user = contactResponse.data.data.user;
                     const contacts = contactResponse.data.data.connections;
                     dispatch(login({ user, accessToken, contacts }));
-                    navigate('/dashboard/oo');
+                    if(accessToken==null)
+                    navigate('/dashboard/google');
+                    else
+                    navigate('/dashboard/jwt');
                 }
             } catch (error) {
                 navigate('/login');

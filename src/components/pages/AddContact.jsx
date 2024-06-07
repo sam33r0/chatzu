@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-
+import Footer from './../../components/Footer/Footer.jsx';
 function AddContact() {
     const backendUri = import.meta.env.VITE_BACKEND_URI;
     const accessToken = useSelector((state) => state.auth.accessToken);
@@ -66,6 +66,7 @@ function AddContact() {
                     </form>
                 </div>
             </div>
+            <Footer />
         </>
     )
 }
