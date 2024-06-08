@@ -8,7 +8,7 @@ function ChatOpener({ setCurrentChat }) {
   return (
     <>
       <div className='w-full flex flex-col gap-1'>
-        <ScrollArea className=" flex w-full h-[500px] rounded-md border">
+        <ScrollArea className=" flex w-full h-[500px] ">
           {
             contacts?.map((c) => {
               return <div className='hover:shadow-2xl cursor-pointer' onClick={() => setCurrentChat(c)} key={c._id}>  <ChatTab avatar={c.avatar} fullName={c.fullName} /></div>

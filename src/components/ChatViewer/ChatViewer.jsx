@@ -6,9 +6,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import AuthorChat from './../AuthorChat';
 import RecieverChat from './../RecieverChat';
 import { ScrollArea } from './../../@/components/ui/scroll-area';
+import { FaArrowAltCircleUp } from "react-icons/fa";
 
-function ChatViewer({ currentChat }) {
+
+function ChatViewer({ currentChat, currentPageSet = 1 }) {
   const [mess, setMess] = useState(null);
+  const [currentPage, setCurrentPage] = useState(Number.parseInt(currentPageSet))
+  const [totalPages, setTotalPages] = useState(1)
   const accessToken = useSelector((state) => state.auth.accessToken);
   const user = useSelector((state) => state.auth.userData);
   const { register, handleSubmit, reset } = useForm();
@@ -60,11 +64,12 @@ function ChatViewer({ currentChat }) {
       scrollTimer();
     }
   }
-
   useEffect(() => {
     const gt = async () => {
       const response = await axios.post(backendUri + '/message', {
         rec: currentChat._id,
+        page: 1,
+        limit: 15 * currentPage
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -72,21 +77,27 @@ function ChatViewer({ currentChat }) {
         },
         withCredentials: true
       })
-      // console.log(response.data.data);
-      setMess(response.data.data)
+      console.log(response, currentPage);
+      setTotalPages(response.data.data.totalPages)
+      setMess(response.data.data.messages.reverse())
       scrollTimer();
     }
     gt();
 
-  }, [currentChat])
+  }, [currentChat, totalPages, currentPage])
   return (
     currentChat &&
     <>
       <div className='flex-1 overflow-y-auto p-4'>
         {/* {JSON.stringify(currentChat)}<br /> */}
-        <ScrollArea ref={scrollAreaRef} className="h-[400px] flex w-full  rounded-md border">
-          {mess.map(m =>
-            <div key={m.createdAt} className='flex w-full flex-wrap-reverse'>
+        <ScrollArea ref={scrollAreaRef} className="h-[400px] p-4 flex w-full ">
+          {totalPages > 1 && <div className='flex justify-center p-5 items-center'>
+            <FaArrowAltCircleUp onClick={() => {
+              setCurrentPage(prev => prev + 1);
+            }} />
+          </div>}
+          {mess?.map(m =>
+            <div key={m.createdAt} className='flex w-full flex-col-reverse '>
               {
                 (m.sender._id == user._id)
                   ?
@@ -101,7 +112,7 @@ function ChatViewer({ currentChat }) {
       </div>
       <div className='sticky bottom-0 p-4 bg-gradient-to-r from-blue-500 to-purple-700'>
         <form onSubmit={handleSubmit(messageHandle)}>
-          <Input {...register("message", { required: true })} className='w-full' placeholder='Enter your message' />
+          <Input autoComplete="off" {...register("message", { required: true })} className='w-full' placeholder='Enter your message' />
         </form>
       </div>
     </>

@@ -6,6 +6,6 @@ function TimeComponent({ dateStr }) {
         new Date(dateStr),
         new Date()
     );
-    return <h1>{str} ago</h1>
+    return <p className='text-xs'>{str} ago</p>
 }
 export default TimeComponent

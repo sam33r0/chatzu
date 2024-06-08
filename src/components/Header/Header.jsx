@@ -31,6 +31,10 @@ function Header() {
       name: "Add Contact",
       slug: "/add-contact",
       active: authStatus,
+    },{
+      name: "Create Room",
+      slug: "/create-room",
+      active: authStatus,
     },
   ];
 

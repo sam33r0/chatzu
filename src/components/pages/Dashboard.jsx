@@ -12,6 +12,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from './../../@/components/ui/avatar.jsx'
+import { MdGroups } from "react-icons/md";
+
 function Dashboard() {
   const { param } = useParams();
   const [currentChat, setCurrentChat] = useState("")
@@ -52,7 +54,9 @@ function Dashboard() {
       <header className="shadow sticky z-50 top-16 text-white">
         <div className='h-14 flex items-center'>
           <div className='outlet h-full w-1/3 justify-center flex items-center heading bg-gradient-to-r from-green-400 to-blue-500'>
-            left column
+              <div className='w-full text-white flex justify-center items-center'>
+                Rooms &nbsp;<MdGroups/>
+              </div>
           </div>
           <div className='chatsection w-2/3 text-center heading h-full justify-center flex items-center heading bg-gradient-to-r from-green-400 to-blue-500'>
             {currentChat ?
@@ -74,11 +78,14 @@ function Dashboard() {
       </header>
       <div className='flex flex-1'>
         <div className='w-1/3 flex items-center flex-col bg-gradient-to-r from-blue-500 to-purple-600'>
-          <ChatOpener setCurrentChat={setCurrentChat} />
+          <div>
+
+            <ChatOpener setCurrentChat={setCurrentChat} />
+          </div>
         </div>
         <div className='w-2/3 flex-1 flex flex-col bg-gradient-to-r from-blue-500 to-purple-600'>
           {/* <div className='flex-1 overflow-y-auto p-4'>*/}
-            <ChatViewer currentChat={currentChat} /> 
+          <ChatViewer currentChat={currentChat} currentPageSet={1} />
           {/* </div>
           <div className='sticky bottom-0 p-4 bg-gradient-to-r from-blue-500 to-purple-700'>
             <Input className='w-full' placeholder='Enter your message' />

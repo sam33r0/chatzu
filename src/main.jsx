@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import Home from './components/Home.jsx'
 import About from './components/Pages/About.jsx'
 import AddContact from './components/Pages/AddContact.jsx'
+import CreateRoom from './components/Pages/CreateRoom.jsx'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: 'add-contact',
         element: <AddContact/>
+      },
+      {
+        path: 'create-room',
+        element: <CreateRoom/>
       }
     ]
   }]);
