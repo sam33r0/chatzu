@@ -19,9 +19,21 @@ function CreateRoom() {
     const submitData = async (data) => {
         console.log(data, "AccessToken here", accessToken);
         try {
+            const fdata = new FormData();
+            fdata.append("file", data.avatar[0]);
+            fdata.append("upload_preset", "scckzbdr");
+            fdata.append('cloud_name', 'de9rb613m');
+
+            const res = await fetch('https://api.cloudinary.com/v1_1/de9rb613m/image/upload', {
+                method: 'post',
+                body: fdata
+            });
+            const avatar = await res.json();
+            console.log("avatar",avatar);
             const response = await axios.post(`${backendUri}/room/create`, {
                 title: data.title,
-                memberList: memberList
+                memberList: memberList,
+                avatar: avatar.url
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,7 +54,7 @@ function CreateRoom() {
         }
     };
 
-    const memberRemover= (i) => {
+    const memberRemover = (i) => {
         let mrr = [...memberList];
         let arr = [...contacts];
         arr.push(mrr[i]);
@@ -77,11 +89,15 @@ function CreateRoom() {
                 <div className='bg-white rounded-lg shadow-lg p-8 w-5/6 md:w-2/3 lg:w-1/2'>
                     <h2 className='m-5 text-3xl font-extrabold text-center mb-8 text-gray-700'>Create New Room</h2>
                     <form className='flex flex-col gap-4' onSubmit={handleSubmit(submitData)}>
-                        <Input
-                            {...register("title", { required: true })}
-                            placeholder='Enter unique name for room'
-                            className="p-2 border border-gray-300 rounded bg-gradient-to-r from-blue-200 via-purple-200 to-indigo-200"
-                        />
+                        <div>
+                            <Input
+                                {...register("title", { required: true })}
+                                placeholder='Enter unique name for room'
+                                className="p-2 border border-gray-300 rounded bg-gradient-to-r from-blue-200 via-purple-200 to-indigo-200"
+                            />
+                            <p className='text-black'>Group Icon</p>
+                            <Input type="file" {...register("avatar")} />
+                        </div>
                         <div className='text-black'>
                             Add Members
                             <div className='flex gap-2 w-full'>
@@ -89,7 +105,7 @@ function CreateRoom() {
                                     Eligible Contacts
                                     <ul className='flex mt-4  flex-col gap-3'>
                                         {contacts.map((m, i) =>
-                                            <li onClick={() => memberHandler(i)} className='w-full text-black bg-cyan-500 hover:bg-green-300 p-5 cursor-pointer'>
+                                            <li key={m.fullName} onClick={() => memberHandler(i)} className='w-full text-black bg-cyan-500 hover:bg-green-300 p-5 cursor-pointer'>
                                                 <div >{m.fullName}</div>
                                             </li>)}
                                     </ul>
@@ -99,7 +115,7 @@ function CreateRoom() {
                                         <>Added Members
                                             <ul className=' flex mt-4 w-full flex-col gap-3'>
                                                 {memberList?.map((m, i) =>
-                                                    <li onClick={() => memberRemover(i)} 
+                                                    <li key={m.fullName} onClick={() => memberRemover(i)}
                                                         className='text-black bg-cyan-500 hover:bg-green-300 p-5 cursor-pointer'>
                                                         <div >{m.fullName}</div>
                                                     </li>)}

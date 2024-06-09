@@ -5,7 +5,8 @@ const initialState = {
     userData: null,
     accessToken: null,
     contacts: null,
-    authGoogle: null
+    authGoogle: null,
+    roomList: null
 }
 
 const authSlice = createSlice({
@@ -17,13 +18,15 @@ const authSlice = createSlice({
             state.userData = action.payload.user;
             state.accessToken = action.payload.accessToken;
             state.contacts = action.payload.contacts;
+            state.roomList= action.payload.roomList;
         },
         logout: (state, action) => {
             state.status = false;
             state.userData = null;
             state.accessToken = null;
             state.contacts = null;
-            state.authGoogle = null
+            state.authGoogle = null;
+            state.roomList = null;
         },
         setGoogle: (state, action) => {
             state.authGoogle = action.payload.authGoogle;

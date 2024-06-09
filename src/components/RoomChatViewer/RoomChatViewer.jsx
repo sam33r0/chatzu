@@ -8,17 +8,56 @@ import RecieverChat from './../RecieverChat';
 import { ScrollArea } from './../../@/components/ui/scroll-area';
 import { FaArrowAltCircleUp } from "react-icons/fa";
 
-
-function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
+function RoomChatViewer({ currentRoom, currentPageSet = 1, setRoomRel }) {
   const [mess, setMess] = useState(null);
   const [currentPage, setCurrentPage] = useState(Number.parseInt(currentPageSet))
   const [totalPages, setTotalPages] = useState(1)
+  // console.log("from current room ", currentRoom);
   const accessToken = useSelector((state) => state.auth.accessToken);
   const user = useSelector((state) => state.auth.userData);
   const { register, handleSubmit, reset } = useForm();
   const scrollAreaRef = useRef(null);
   const backendUri = import.meta.env.VITE_BACKEND_URI;
   const dummyDivRef = useRef(null);
+  const messageHandle = async (data) => {
+    const response = await axios.post(backendUri + `/message/room-message`, {
+      roomID: currentRoom._id,
+      content: data.message,
+      roomName: currentRoom.title
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      withCredentials: true
+    });
+    // console.log("message handle= \t", response);
+
+    if (response) {
+      mess.push({
+        _id: new Date(),
+        content: data.message,
+        createdAt: new Date(),
+        author: user._id,
+        authorName: {
+          _id: user._id,
+          avatar: user.avatar,
+          fullName: user.fullName
+        },
+        reciever: {
+          _id: currentRoom._id,
+          avatar: currentRoom.avatar,
+          fullName: currentRoom.title
+        }
+      })
+      setRoomRel(prev => !prev)
+      reset();
+      // setTimeout(
+      //   () => scrollToBottom(), 500
+      // )
+      scrollTimer();
+    }
+  }
   const scrollToBottom = () => {
     if (dummyDivRef.current) {
       dummyDivRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -29,48 +68,12 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
       () => scrollToBottom(), 500
     )
   }
-  const messageHandle = async (data) => {
-    const response = await axios.post(backendUri + '/message/direct', {
-      content: data.message,
-      recieverId: currentChat._id
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
-      },
-      withCredentials: true
-    });
-
-    if (response) {
-      mess.push({
-        _id: new Date(),
-        content: data.message,
-        createdAt: new Date(),
-        sender: {
-          _id: user._id,
-          avatar: user.avatar,
-          fullName: user.fullName
-        },
-        reciever: {
-          _id: currentChat._id,
-          avatar: currentChat.avatar,
-          fullName: currentChat.fullName
-        }
-      })
-      reset();
-      // setTimeout(
-      //   () => scrollToBottom(), 500
-      // )
-      setRel(prev=>!prev);
-      scrollTimer();
-    }
-  }
   useEffect(() => {
     const gt = async () => {
-      const response = await axios.post(backendUri + '/message', {
-        rec: currentChat._id,
+      const response = await axios.post(backendUri + `/message/room`, {
+        roomId: currentRoom._id,
         page: 1,
-        limit: 15 * currentPage
+        limit: 10 * currentPage
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -78,16 +81,15 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
         },
         withCredentials: true
       })
-      // console.log(response, currentPage);
       setTotalPages(response.data.data.totalPages)
       setMess(response.data.data.messages.reverse())
       scrollTimer();
     }
     gt();
 
-  }, [currentChat, totalPages, currentPage])
+  }, [currentRoom, totalPages, currentPage])
   return (
-    currentChat &&
+    currentRoom &&
     <>
       <div className='flex-1 overflow-y-auto p-4'>
         {/* {JSON.stringify(currentChat)}<br /> */}
@@ -99,14 +101,15 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
           </div>}
           {mess?.map(m =>
             <div key={m.createdAt} className='flex w-full flex-col-reverse '>
+
               {
-                (m.sender._id == user._id)
+                (m.author == user._id)
                   ?
                   <AuthorChat message={m.content} createdAt={m.createdAt} />
                   :
-                  <RecieverChat message={m.content} createdAt={m.createdAt} />
+                  <RecieverChat fullName={m.authorName?.fullName} avatar={m.authorName?.avatar} message={m.content} createdAt={m.createdAt} />
               }
-              {/* {m.content}<br /> */}
+
             </div>)}
           <div ref={dummyDivRef}></div>
         </ScrollArea>
@@ -120,4 +123,4 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
   )
 }
 
-export default ChatViewer
+export default RoomChatViewer

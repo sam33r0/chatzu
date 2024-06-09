@@ -12,6 +12,7 @@ import Home from './components/Home.jsx'
 import About from './components/Pages/About.jsx'
 import AddContact from './components/Pages/AddContact.jsx'
 import CreateRoom from './components/Pages/CreateRoom.jsx'
+import AddMember from './components/AddMember.jsx'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -38,12 +39,16 @@ const router = createBrowserRouter([
         element: <About/>
       },
       {
-        path: 'add-contact',
+        path: '/add-contact',
         element: <AddContact/>
       },
       {
-        path: 'create-room',
+        path: '/create-room',
         element: <CreateRoom/>
+      },
+      {
+        path: '/room/addMember/:rid',
+        element: <AddMember/>
       }
     ]
   }]);

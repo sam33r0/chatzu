@@ -28,7 +28,7 @@ function Login() {
       });
 
       if (res.status === 200) {
-        dispatch(login({ user: res.data.data.user, accessToken: res.data.data.accessToken, contacts: res.data.data.connections }));
+        dispatch(login({ user: res.data.data.user, accessToken: res.data.data.accessToken, contacts: res.data.data.connections, roomList: res.data.data.roomList }));
         navigate('/dashboard/jwt');
       }
     } catch (err) {
