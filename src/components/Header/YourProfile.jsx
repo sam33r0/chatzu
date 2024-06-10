@@ -27,7 +27,7 @@ function YourProfile() {
     const dispath = useDispatch();
     const accessToken = useSelector((state) => state.auth.accessToken);
     const logoutHandler = () => {
-        if (google=="google") {
+        if (google == "google") {
             dispath(logout());
             window.open((backendUri + '/user/Glogout'), "_self")
         }
@@ -60,12 +60,16 @@ function YourProfile() {
                 <DropdownMenuContent>
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    {
+                        (google == "jwt") &&
+                        <>
+                            <DropdownMenuItem><button className="w-full h-full text-left" onClick={changePass}>Change Password </button></DropdownMenuItem>
+                            <DropdownMenuItem><button className="w-full h-full text-left" onClick={updateAvata}>Update Profile Photo</button></DropdownMenuItem>
+                            <DropdownMenuItem><button className="w-full h-full text-left" onClick={updateAcco}>Update Name or email</button></DropdownMenuItem>
 
-                    <DropdownMenuItem><button className="w-full h-full text-left" onClick={changePass}>Change Password </button></DropdownMenuItem>
-                    <DropdownMenuItem><button className="w-full h-full text-left" onClick={updateAvata}>Update Profile Photo</button></DropdownMenuItem>
-                    <DropdownMenuItem><button className="w-full h-full text-left" onClick={updateAcco}>Update Name or email</button></DropdownMenuItem>
+                        </>
+                    }
                     <DropdownMenuItem><button className="w-full h-full text-left" onClick={logoutHandler}>Logout</button></DropdownMenuItem>
-                
                 </DropdownMenuContent>
             </DropdownMenu>
 

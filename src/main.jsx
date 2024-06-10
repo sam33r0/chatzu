@@ -13,6 +13,10 @@ import About from './components/Pages/About.jsx'
 import AddContact from './components/Pages/AddContact.jsx'
 import CreateRoom from './components/Pages/CreateRoom.jsx'
 import AddMember from './components/Utils/AddMember.jsx'
+import UpdateAvatar from './components/UserPages/UpdateAvatar.jsx'
+import ChangePassword from './components/UserPages/ChangePassword.jsx'
+import UpdateAcD from './components/UserPages/UpdateAcD.jsx'
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -35,20 +39,32 @@ const router = createBrowserRouter([
         element: <Dashboard />
       },
       {
-        path:'/about',
-        element: <About/>
+        path: '/about',
+        element: <About />
       },
       {
         path: '/add-contact',
-        element: <AddContact/>
+        element: <AddContact />
       },
       {
         path: '/create-room',
-        element: <CreateRoom/>
+        element: <CreateRoom />
       },
       {
         path: '/room/addMember/:rid',
-        element: <AddMember/>
+        element: <AddMember />
+      },
+      {
+        path: '/user/change-password',
+        element: <ChangePassword />
+      },
+      {
+        path: '/user/update-account',
+        element: <UpdateAcD />
+      },
+      {
+        path: '/user/update-avatar',
+        element: <UpdateAvatar />
       }
     ]
   }]);
