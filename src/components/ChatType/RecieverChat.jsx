@@ -1,10 +1,10 @@
 import React from 'react';
-import TimeComponent from './TimeComponent';
+import TimeComponent from './../Utils/TimeComponent';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from './../@/components/ui/avatar.jsx'
+} from './../../@/components/ui/avatar.jsx'
 function RecieverChat({ message, createdAt, avatar, fullName }) {
   return (
     <div className="flex gap-2 w-full justify-start mb-4">

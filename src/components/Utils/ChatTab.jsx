@@ -3,7 +3,7 @@ import {
     Avatar,
     AvatarFallback,
     AvatarImage,
-} from '../@/components/ui/avatar.jsx'
+} from '../../@/components/ui/avatar.jsx'
 function ChatTab({ avatar, fullName }) {
     return (
         <div className={`flex gap-4 w-full border-2 rounded-2xl p-2 mt-2`} >

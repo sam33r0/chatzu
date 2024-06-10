@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { Input } from './../../@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import React, { useState, useRef, useEffect } from 'react';
-import AuthorChat from './../AuthorChat';
-import RecieverChat from './../RecieverChat';
+import AuthorChat from './../ChatType/AuthorChat';
+import RecieverChat from './../ChatType/RecieverChat';
 import { ScrollArea } from './../../@/components/ui/scroll-area';
 import { FaArrowAltCircleUp } from "react-icons/fa";
 
@@ -21,9 +21,9 @@ function RoomChatViewer({ currentRoom, currentPageSet = 1, setRoomRel }) {
   const dummyDivRef = useRef(null);
   const messageHandle = async (data) => {
     const response = await axios.post(backendUri + `/message/room-message`, {
-      roomID: currentRoom._id,
+      roomID: currentRoom?._id,
       content: data.message,
-      roomName: currentRoom.title
+      roomName: currentRoom?.title
     }, {
       headers: {
         'Content-Type': 'application/json',
@@ -45,9 +45,9 @@ function RoomChatViewer({ currentRoom, currentPageSet = 1, setRoomRel }) {
           fullName: user.fullName
         },
         reciever: {
-          _id: currentRoom._id,
-          avatar: currentRoom.avatar,
-          fullName: currentRoom.title
+          _id: currentRoom?._id,
+          avatar: currentRoom?.avatar,
+          fullName: currentRoom?.title
         }
       })
       setRoomRel(prev => !prev)
@@ -71,7 +71,7 @@ function RoomChatViewer({ currentRoom, currentPageSet = 1, setRoomRel }) {
   useEffect(() => {
     const gt = async () => {
       const response = await axios.post(backendUri + `/message/room`, {
-        roomId: currentRoom._id,
+        roomId: currentRoom?._id,
         page: 1,
         limit: 10 * currentPage
       }, {
@@ -93,7 +93,7 @@ function RoomChatViewer({ currentRoom, currentPageSet = 1, setRoomRel }) {
     <>
       <div className='flex-1 overflow-y-auto p-4'>
         {/* {JSON.stringify(currentChat)}<br /> */}
-        <ScrollArea ref={scrollAreaRef} className="h-[400px] p-4 flex w-full ">
+        <ScrollArea ref={scrollAreaRef} className={`md:h-[calc(100vh-35vh)] h-[70vh] p-4 flex w-full`}>
           {totalPages > 1 && <div className='flex justify-center p-5 items-center'>
             <FaArrowAltCircleUp onClick={() => {
               setCurrentPage(prev => prev + 1);

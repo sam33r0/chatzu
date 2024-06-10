@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from './../../@/components/ui/scroll-area'
 import React from 'react'
-import ChatTab from './../../components/ChatTab';
+import ChatTab from './../../components/Utils/ChatTab';
 import { useEffect } from 'react';
 import { login } from './../../components/store/authSlice';
 import axios from 'axios';

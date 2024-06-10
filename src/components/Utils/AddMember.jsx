@@ -1,10 +1,10 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Button } from '../@/components/ui/button.jsx';
+import { Button } from '../../@/components/ui/button.jsx';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import Footer from './../components/Footer/Footer.jsx';
+import Footer from './../Footer/Footer.jsx';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 function AddMember() {

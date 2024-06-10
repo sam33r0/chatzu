@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { Input } from './../../@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import React, { useState, useRef, useEffect } from 'react';
-import AuthorChat from './../AuthorChat';
-import RecieverChat from './../RecieverChat';
+import AuthorChat from './../ChatType/AuthorChat';
+import RecieverChat from './../ChatType/RecieverChat';
 import { ScrollArea } from './../../@/components/ui/scroll-area';
 import { FaArrowAltCircleUp } from "react-icons/fa";
 
@@ -52,7 +52,7 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
           fullName: user.fullName
         },
         reciever: {
-          _id: currentChat._id,
+          _id: currentChat?._id,
           avatar: currentChat.avatar,
           fullName: currentChat.fullName
         }
@@ -61,14 +61,14 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
       // setTimeout(
       //   () => scrollToBottom(), 500
       // )
-      setRel(prev=>!prev);
+      setRel(prev => !prev);
       scrollTimer();
     }
   }
   useEffect(() => {
     const gt = async () => {
       const response = await axios.post(backendUri + '/message', {
-        rec: currentChat._id,
+        rec: currentChat?._id,
         page: 1,
         limit: 15 * currentPage
       }, {
@@ -85,13 +85,13 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
     }
     gt();
 
-  }, [currentChat, totalPages, currentPage])
+  }, [currentChat, totalPages, currentPage, setCurrentPage, setTotalPages, setMess, axios])
   return (
     currentChat &&
     <>
       <div className='flex-1 overflow-y-auto p-4'>
         {/* {JSON.stringify(currentChat)}<br /> */}
-        <ScrollArea ref={scrollAreaRef} className="h-[400px] p-4 flex w-full ">
+        <ScrollArea ref={scrollAreaRef} className={`md:h-[calc(100vh-35vh)] h-[70vh] p-4 flex w-full`}>
           {totalPages > 1 && <div className='flex justify-center p-5 items-center'>
             <FaArrowAltCircleUp onClick={() => {
               setCurrentPage(prev => prev + 1);

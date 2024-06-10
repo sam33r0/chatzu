@@ -1,4 +1,4 @@
-import ChatTab from './../ChatTab.jsx';
+import ChatTab from './../Utils/ChatTab';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from './../../@/components/ui/scroll-area';

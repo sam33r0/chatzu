@@ -12,7 +12,7 @@ import Home from './components/Home.jsx'
 import About from './components/Pages/About.jsx'
 import AddContact from './components/Pages/AddContact.jsx'
 import CreateRoom from './components/Pages/CreateRoom.jsx'
-import AddMember from './components/AddMember.jsx'
+import AddMember from './components/Utils/AddMember.jsx'
 const router = createBrowserRouter([
   {
     path: '/',

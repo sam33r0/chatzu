@@ -1,5 +1,5 @@
 import React from 'react';
-import TimeComponent from './TimeComponent';
+import TimeComponent from './../Utils/TimeComponent';
 
 function AuthorChat({ message, createdAt }) {
   return (
