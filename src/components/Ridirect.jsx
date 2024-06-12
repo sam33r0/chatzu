@@ -34,7 +34,6 @@ function Ridirect() {
                 },
                 withCredentials: true
             }).then(res => {
-                console.log(res.data)
                 dispatch(userSetup({ user: res.data.user }))
                 user = res.data.user;
                 setupFunc();

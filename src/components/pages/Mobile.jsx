@@ -16,8 +16,9 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import RoomViewer from './../../components/RoomViewer/RoomViewer.jsx';
 
-function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, currentChat, rel, setRel, roomRel, setRoomRel, }) {
+function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, currentChat, rel, setRel, roomRel, setRoomRel, showRoom, setShowRoom }) {
     const navigate = useNavigate();
     const socket = useSelector((state) => state.auth.socket);
     useEffect(() => {
@@ -48,8 +49,7 @@ function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
             };
         }
     }, [socket, currentChat, room])
-    // if room => show roomOpener section then  if currentRoom =>  show roomChatViewer section
-    //  if not room =>  then show chatOpener section then => if currentChat then show chatViewer
+
     return (
         <div className='flex-1 flex flex-col'>
 
@@ -62,7 +62,14 @@ function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
                             <>
                                 <div className={`flex gap-4 w-full rounded-2xl  `} >
                                     <div className='flex justify-center gap-2 items-center'>
-                                        <div onClick={() => setCurrentRoom("")}>
+                                        <div onClick={() => {
+                                            if (showRoom) {
+                                                setShowRoom(false);
+                                            }
+                                            else {
+                                                setCurrentRoom("")
+                                            }
+                                        }}>
                                             Back
                                         </div>
                                         <Avatar>
@@ -70,7 +77,7 @@ function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
                                     </div>
-                                    <div className='w-full text-white flex justify-center items-center'>
+                                    <div onClick={() => setShowRoom(prev => !prev)} className='w-full text-white flex justify-center items-center'>
                                         {currentRoom.title}
                                     </div>
                                     <div onClick={() => {
@@ -115,7 +122,7 @@ function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
                     {
                         room
                             ?
-                            <RoomOpener currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} roomRel={roomRel} />
+                            <RoomOpener setShowRoom={setShowRoom} currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} roomRel={roomRel} />
                             :
                             <ChatOpener currentChat={currentChat} setCurrentChat={setCurrentChat} reli={rel} />
                     }
@@ -126,6 +133,10 @@ function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
                     {/* <div className='flex-1 overflow-y-auto p-4'>*/}
                     {room
                         ?
+                        showRoom 
+                        ?
+                        <RoomViewer currentRoom={currentRoom}/>
+                        :
                         <RoomChatViewer currentRoom={currentRoom} setRoomRel={setRoomRel} />
                         :
                         <ChatViewer currentChat={currentChat} currentPageSet={1} setRel={setRel} />

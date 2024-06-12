@@ -15,10 +15,11 @@ import RoomOpener from './../../components/RoomOpener/RoomOpener.jsx';
 import RoomChatViewer from './../../components/RoomChatViewer/RoomChatViewer.jsx';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import RoomViewer from './../../components/RoomViewer/RoomViewer.jsx';
 
-function Laptop({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, currentChat, rel, setRel, roomRel, setRoomRel, }) {
+function Laptop({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, currentChat, rel, setRel, roomRel, setRoomRel, showRoom, setShowRoom }) {
     const navigate = useNavigate();
-    const socket = useSelector((state)=>state.auth.socket);
+    const socket = useSelector((state) => state.auth.socket);
     useEffect(() => {
         if (!room) {
             const handleNewMessage = (res) => {
@@ -71,7 +72,7 @@ function Laptop({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
                                                     <AvatarFallback>CN</AvatarFallback>
                                                 </Avatar>
                                             </div>
-                                            <div className='w-full text-white flex justify-center items-center'>
+                                            <div onClick={() => setShowRoom(prev => !prev)} className='w-full text-white flex justify-center items-center'>
                                                 {currentRoom.title}
                                             </div>
                                             <div onClick={() => {
@@ -107,7 +108,7 @@ function Laptop({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
             <div className='flex flex-1'>
                 <div className='w-1/3 flex items-center flex-col bg-gradient-to-r from-blue-500 to-purple-600'>
                     {
-                        room ? <RoomOpener setCurrentRoom={setCurrentRoom} currentRoom={currentRoom} roomRel={roomRel} /> : <ChatOpener currentChat={currentChat} setCurrentChat={setCurrentChat} reli={rel} />
+                        room ? <RoomOpener setShowRoom={setShowRoom} setCurrentRoom={setCurrentRoom} currentRoom={currentRoom} roomRel={roomRel} /> : <ChatOpener currentChat={currentChat} setCurrentChat={setCurrentChat} reli={rel} />
                     }
                 </div>
                 <div className='w-2/3 flex-1 flex flex-col bg-gradient-to-r from-blue-500 to-purple-600'>
@@ -116,7 +117,11 @@ function Laptop({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
                         ?
                         currentRoom
                             ?
-                            <RoomChatViewer parent={"laptop"} currentRoom={currentRoom} setRoomRel={setRoomRel} />
+                            showRoom
+                                ?
+                                <RoomViewer currentRoom={currentRoom} />
+                                :
+                                <RoomChatViewer parent={"laptop"} currentRoom={currentRoom} setRoomRel={setRoomRel} />
                             :
                             <> </>
                         :

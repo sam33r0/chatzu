@@ -10,7 +10,8 @@ import useDebounce from './../../components/CustomHook/useDebounce';
 import { toast } from 'react-toastify';
 
 
-function RoomOpener({currentRoom ,setCurrentRoom, roomRel }) {
+function RoomOpener({setShowRoom ,currentRoom ,setCurrentRoom, roomRel }) {
+  
   const socket = useSelector((state) => state.auth.socket);
   const roomList = useSelector((state) => state.auth)?.roomList;
   const dispatch = useDispatch();
@@ -79,6 +80,7 @@ function RoomOpener({currentRoom ,setCurrentRoom, roomRel }) {
               return <div className='hover:shadow-2xl cursor-pointer w-full'
                 onClick={() => {
                   socket.emit('join-room-chat', c._id);
+                  setShowRoom(false);
                   setCurrentRoom(c)
                 }} key={c._id}>  <ChatTab avatar={c.avatar} fullName={c.title} /></div>
             }

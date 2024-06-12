@@ -8,6 +8,7 @@ import Mobile from './Mobile.jsx';
 import { useMediaQuery } from 'react-responsive';
 
 function Dashboard({ param }) {
+  const [showRoom, setShowRoom] = useState(false);
   const [rel, setRel] = useState(true);
   const [roomRel, setRoomRel] = useState(true);
   const [currentChat, setCurrentChat] = useState("");
@@ -65,6 +66,8 @@ function Dashboard({ param }) {
       setRel={setRel}
       roomRel={roomRel}
       setRoomRel={setRoomRel}
+      showRoom={showRoom}
+      setShowRoom={setShowRoom}
     />
   );
 
@@ -80,6 +83,8 @@ function Dashboard({ param }) {
       setRel={setRel}
       roomRel={roomRel}
       setRoomRel={setRoomRel}
+      showRoom={showRoom}
+      setShowRoom={setShowRoom}
     />
   );
 

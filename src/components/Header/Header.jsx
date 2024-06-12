@@ -114,7 +114,7 @@ function Header() {
                 </li>
 
                 {navItems.map((item) => (item.active ?
-                  <li>
+                  <li key={item.slug}>
                     <NavLink
                       key={item.slug}
                       to={item.slug}
