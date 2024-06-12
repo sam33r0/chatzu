@@ -13,11 +13,42 @@ import { FaExchangeAlt } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import RoomOpener from './../../components/RoomOpener/RoomOpener.jsx';
 import RoomChatViewer from './../../components/RoomChatViewer/RoomChatViewer.jsx';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 function Laptop({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, currentChat, rel, setRel, roomRel, setRoomRel, }) {
     const navigate = useNavigate();
+    const socket = useSelector((state)=>state.auth.socket);
+    useEffect(() => {
+        if (!room) {
+            const handleNewMessage = (res) => {
+                console.log(currentRoom, res);
+                toast(`${res.author.fullName} sent "${res.mess.content}" in ${res.roomTitle}`)
+
+            }
+            socket?.on('new-room-messages-arrived', handleNewMessage);
+
+            // Clean up the event listener on component unmount
+            return () => {
+                socket?.off('new-room-messages-arrived', handleNewMessage);
+            };
+        }
+    }, [socket, currentRoom, room])
+    useEffect(() => {
+        if (room) {
+            const handleNewMessage = (res) => {
+                toast(`${res.sender.fullName} sent "${res.content}"`)
+            }
+            socket?.on('direct-message-arrived', handleNewMessage);
+
+            // Clean up the event listener on component unmount
+            return () => {
+                socket?.off('direct-message-arrived', handleNewMessage);
+            };
+        }
+    }, [socket, currentChat, room])
     return (
-        <div className='flex-1 hidden md:flex flex-col '>
+        <div className='flex-1 flex flex-col '>
             <header className="shadow sticky z-50 top-16 text-white">
                 <div className='h-14 flex items-center'>
                     <div className='outlet h-full w-1/3 justify-center flex items-center heading bg-gradient-to-r from-green-400 to-blue-500'>
@@ -76,12 +107,25 @@ function Laptop({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
             <div className='flex flex-1'>
                 <div className='w-1/3 flex items-center flex-col bg-gradient-to-r from-blue-500 to-purple-600'>
                     {
-                        room ? <RoomOpener setCurrentRoom={setCurrentRoom} roomRel={roomRel} /> : <ChatOpener setCurrentChat={setCurrentChat} reli={rel} />
+                        room ? <RoomOpener setCurrentRoom={setCurrentRoom} currentRoom={currentRoom} roomRel={roomRel} /> : <ChatOpener currentChat={currentChat} setCurrentChat={setCurrentChat} reli={rel} />
                     }
                 </div>
                 <div className='w-2/3 flex-1 flex flex-col bg-gradient-to-r from-blue-500 to-purple-600'>
                     {/* <div className='flex-1 overflow-y-auto p-4'>*/}
-                    {room ? <RoomChatViewer currentRoom={currentRoom} setRoomRel={setRoomRel} /> : <ChatViewer currentChat={currentChat} currentPageSet={1} setRel={setRel} />}
+                    {room
+                        ?
+                        currentRoom
+                            ?
+                            <RoomChatViewer parent={"laptop"} currentRoom={currentRoom} setRoomRel={setRoomRel} />
+                            :
+                            <> </>
+                        :
+                        currentChat
+                            ?
+
+                            <ChatViewer currentChat={currentChat} currentPageSet={1} setRel={setRel} />
+                            :
+                            <></>}
                     {/* </div>
           <div className='sticky bottom-0 p-4 bg-gradient-to-r from-blue-500 to-purple-700'>
             <Input className='w-full' placeholder='Enter your message' />

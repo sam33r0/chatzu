@@ -7,12 +7,48 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { login } from './../../components/store/authSlice.js';
 import { useState } from 'react';
-function ChatOpener({ setCurrentChat, reli }) {
+import { toast } from 'react-toastify';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '../../@/components/ui/avatar.jsx'
+function ChatOpener({ currentChat, setCurrentChat, reli }) {
+
+  const socket = useSelector((state) => state.auth.socket);
   const contacts = useSelector((state) => state.auth.contacts)?.contacts;
   const backendUri = import.meta.env.VITE_BACKEND_URI;
   const accessToken = useSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  useEffect(() => {
+    const handleNewMessage = (res) => {
+
+      if (currentChat == "") {
+        // toast(
+        //   // <div>
+        //   //   <p>{res.content}</p>
+        //   //   <div className='flex justify-end items-center'>
+        //   //     <Avatar>
+        //   //       <AvatarImage src={res.sender.avatar} alt="avatar" />
+        //   //       <AvatarFallback>CN</AvatarFallback>
+        //   //     </Avatar>
+        //   //     <span>{res.sender.fullName}</span>
+        //   //   </div>
+        //   // </div>
+        //   `${res.content}`
+        // );
+        toast(`${res.sender.fullName} sent "${res.content}"`)
+      }
+    }
+    socket?.on('direct-message-arrived', handleNewMessage);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      socket?.off('direct-message-arrived', handleNewMessage);
+    };
+  }, [socket, currentChat])
+
   useEffect(
     () => {
       (async () => {
@@ -44,7 +80,11 @@ function ChatOpener({ setCurrentChat, reli }) {
         <ScrollArea className=" flex w-full h-[500px] ">
           {
             contacts?.map((c) => {
-              return <div className='hover:shadow-2xl cursor-pointer' onClick={() => setCurrentChat(c)} key={c._id}>  <ChatTab avatar={c.avatar} fullName={c.fullName} /></div>
+              return <div className='hover:shadow-2xl cursor-pointer'
+                onClick={() => {
+                  socket.emit('join-direct-chat', c);
+                  setCurrentChat(c)
+                }} key={c._id}>  <ChatTab avatar={c.avatar} fullName={c.fullName} /></div>
             }
             )
           }

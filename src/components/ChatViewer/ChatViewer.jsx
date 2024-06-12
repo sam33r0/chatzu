@@ -7,10 +7,15 @@ import AuthorChat from './../ChatType/AuthorChat';
 import RecieverChat from './../ChatType/RecieverChat';
 import { ScrollArea } from './../../@/components/ui/scroll-area';
 import { FaArrowAltCircleUp } from "react-icons/fa";
-
-
+import { toast } from 'react-toastify';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '../../@/components/ui/avatar.jsx'
 function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
   const [mess, setMess] = useState(null);
+  const socket = useSelector((state) => state.auth.socket);
   const [currentPage, setCurrentPage] = useState(Number.parseInt(currentPageSet))
   const [totalPages, setTotalPages] = useState(1)
   const accessToken = useSelector((state) => state.auth.accessToken);
@@ -42,6 +47,19 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
     });
 
     if (response) {
+      socket.emit('new-direct-message', {
+        response: response.data.data,
+        sender: {
+          _id: user._id,
+          avatar: user.avatar,
+          fullName: user.fullName
+        },
+        reciever: {
+          _id: currentChat?._id,
+          avatar: currentChat.avatar,
+          fullName: currentChat.fullName
+        },
+      })
       mess.push({
         _id: new Date(),
         content: data.message,
@@ -65,27 +83,68 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
       scrollTimer();
     }
   }
+  const gt = async () => {
+    const response = await axios.post(backendUri + '/message', {
+      rec: currentChat?._id,
+      page: 1,
+      limit: 15 * currentPage
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      withCredentials: true
+    })
+    // console.log(response, currentPage);
+    setTotalPages(response.data.data.totalPages)
+    setMess(response.data.data.messages.reverse())
+    scrollTimer();
+  }
   useEffect(() => {
-    const gt = async () => {
-      const response = await axios.post(backendUri + '/message', {
-        rec: currentChat?._id,
-        page: 1,
-        limit: 15 * currentPage
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`
-        },
-        withCredentials: true
-      })
-      // console.log(response, currentPage);
-      setTotalPages(response.data.data.totalPages)
-      setMess(response.data.data.messages.reverse())
-      scrollTimer();
-    }
     gt();
+  }, [currentChat, currentPage])
 
-  }, [currentChat, totalPages, currentPage, setCurrentPage, setTotalPages, setMess, axios])
+  useEffect(() => {
+    const handleNewMessage = (res) => {
+      if (currentChat != "" && currentChat._id != res?.sender._id) {
+        //give notifications
+        // toast(<>
+        //   <p>{res.content}</p>
+        //   <div className='flex justify-end items-center'>
+        //     <Avatar>
+        //       <AvatarImage src={res.sender.avatar} alt="avatar" />
+        //       <AvatarFallback>CN</AvatarFallback>
+        //     </Avatar>
+        //     <span>{res.sender.fullName}</span>
+        //   </div>
+        // </>);
+        toast(`${res.sender.fullName} sent "${res.content}"`)
+      }
+      else {
+        if (res && (!mess.length || mess[mess.length - 1].createdAt !== res.createdAt)) {
+          setMess((prevMess) => [
+            ...prevMess,
+            {
+              _id: res._id,
+              content: res.content,
+              createdAt: res.createdAt,
+              sender: res.sender,
+              reciever: res.reciever
+            }
+          ]);
+          scrollTimer();
+        }
+      }
+    };
+
+    socket?.on('direct-message-arrived', handleNewMessage);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      socket?.off('direct-message-arrived', handleNewMessage);
+    };
+  }, [socket, mess, currentChat]);
+
   return (
     currentChat &&
     <>

@@ -13,14 +13,45 @@ import { FaPlus } from "react-icons/fa";
 import RoomOpener from './../../components/RoomOpener/RoomOpener.jsx';
 import RoomChatViewer from './../../components/RoomChatViewer/RoomChatViewer.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, currentChat, rel, setRel, roomRel, setRoomRel, }) {
     const navigate = useNavigate();
+    const socket = useSelector((state) => state.auth.socket);
+    useEffect(() => {
+        if (!room) {
+            const handleNewMessage = (res) => {
+                console.log(currentRoom, res);
+                toast(`${res.author.fullName} sent "${res.mess.content}"  in ${res.roomTitle}`)
 
+            }
+            socket?.on('new-room-messages-arrived', handleNewMessage);
+
+            // Clean up the event listener on component unmount
+            return () => {
+                socket?.off('new-room-messages-arrived', handleNewMessage);
+            };
+        }
+    }, [socket, currentRoom, room])
+    useEffect(() => {
+        if (room) {
+            const handleNewMessage = (res) => {
+                toast(`${res.sender.fullName} sent "${res.content}"`)
+            }
+            socket?.on('direct-message-arrived', handleNewMessage);
+
+            // Clean up the event listener on component unmount
+            return () => {
+                socket?.off('direct-message-arrived', handleNewMessage);
+            };
+        }
+    }, [socket, currentChat, room])
     // if room => show roomOpener section then  if currentRoom =>  show roomChatViewer section
     //  if not room =>  then show chatOpener section then => if currentChat then show chatViewer
     return (
-        <div className='flex-1 flex md:hidden flex-col'>
+        <div className='flex-1 flex flex-col'>
 
             <div className='chatsection w-full text-center heading p-4 justify-center flex items-center heading bg-gradient-to-r from-green-400 to-blue-500'>
                 {
@@ -31,7 +62,7 @@ function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
                             <>
                                 <div className={`flex gap-4 w-full rounded-2xl  `} >
                                     <div className='flex justify-center gap-2 items-center'>
-                                        <div onClick={() => setCurrentRoom(null)}>
+                                        <div onClick={() => setCurrentRoom("")}>
                                             Back
                                         </div>
                                         <Avatar>
@@ -60,7 +91,7 @@ function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
                             ?
                             <div className={`flex gap-4 w-full rounded-2xl  `} >
                                 <div className='flex justify-center gap-2 items-center'>
-                                    <div onClick={() => setCurrentChat(null)}>
+                                    <div onClick={() => setCurrentChat('')}>
                                         Back
                                     </div>
                                     <Avatar>
@@ -82,14 +113,23 @@ function Mobile({ room, setRoom, currentRoom, setCurrentRoom, setCurrentChat, cu
             {(!currentChat && !currentRoom) &&
                 <div className='w-full flex items-center flex-col bg-gradient-to-r from-blue-500 to-purple-600'>
                     {
-                        room ? <RoomOpener setCurrentRoom={setCurrentRoom} roomRel={roomRel} /> : <ChatOpener setCurrentChat={setCurrentChat} reli={rel} />
+                        room
+                            ?
+                            <RoomOpener currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} roomRel={roomRel} />
+                            :
+                            <ChatOpener currentChat={currentChat} setCurrentChat={setCurrentChat} reli={rel} />
                     }
                 </div>
             }
             {
                 <div className='w-full flex-1 flex flex-col bg-gradient-to-r from-blue-500 to-purple-600'>
                     {/* <div className='flex-1 overflow-y-auto p-4'>*/}
-                    {room ? <RoomChatViewer currentRoom={currentRoom} setRoomRel={setRoomRel} /> : <ChatViewer currentChat={currentChat} currentPageSet={1} setRel={setRel} />}
+                    {room
+                        ?
+                        <RoomChatViewer currentRoom={currentRoom} setRoomRel={setRoomRel} />
+                        :
+                        <ChatViewer currentChat={currentChat} currentPageSet={1} setRel={setRel} />
+                    }
                 </div>
             }
         </div>

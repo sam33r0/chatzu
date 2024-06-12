@@ -16,6 +16,7 @@ import AddMember from './components/Utils/AddMember.jsx'
 import UpdateAvatar from './components/UserPages/UpdateAvatar.jsx'
 import ChangePassword from './components/UserPages/ChangePassword.jsx'
 import UpdateAcD from './components/UserPages/UpdateAcD.jsx'
+import Ridirect from './components/Ridirect.jsx'
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/dashboard/:param',
-        element: <Dashboard />
+        element: <Ridirect />
       },
       {
         path: '/about',

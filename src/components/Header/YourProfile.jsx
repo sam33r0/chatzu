@@ -64,11 +64,12 @@ function YourProfile() {
                         (google == "jwt") &&
                         <>
                             <DropdownMenuItem><button className="w-full h-full text-left" onClick={changePass}>Change Password </button></DropdownMenuItem>
-                            <DropdownMenuItem><button className="w-full h-full text-left" onClick={updateAvata}>Update Profile Photo</button></DropdownMenuItem>
+
                             <DropdownMenuItem><button className="w-full h-full text-left" onClick={updateAcco}>Update Name or email</button></DropdownMenuItem>
 
                         </>
                     }
+                    <DropdownMenuItem><button className="w-full h-full text-left" onClick={updateAvata}>Update Profile Photo</button></DropdownMenuItem>
                     <DropdownMenuItem><button className="w-full h-full text-left" onClick={logoutHandler}>Logout</button></DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
