@@ -35,6 +35,7 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
     )
   }
   const messageHandle = async (data) => {
+    reset();
     const response = await axios.post(backendUri + '/message/direct', {
       content: data.message,
       recieverId: currentChat._id
@@ -75,7 +76,7 @@ function ChatViewer({ currentChat, currentPageSet = 1, setRel }) {
           fullName: currentChat.fullName
         }
       })
-      reset();
+
       // setTimeout(
       //   () => scrollToBottom(), 500
       // )
