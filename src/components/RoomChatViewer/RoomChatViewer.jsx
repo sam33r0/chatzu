@@ -82,6 +82,7 @@ function RoomChatViewer({ currentRoom, currentPageSet = 1, setRoomRel }) {
   }, [socket, mess, currentRoom]);
 
   const messageHandle = async (data) => {
+    reset();
     const response = await axios.post(backendUri + `/message/room-message`, {
       roomID: currentRoom?._id,
       content: data.message,
@@ -117,7 +118,6 @@ function RoomChatViewer({ currentRoom, currentPageSet = 1, setRoomRel }) {
         }
       ]);
       setRoomRel((prev) => !prev);
-      reset();
       scrollTimer();
     }
   };
