@@ -13,7 +13,7 @@ function Login() {
   const dispatch = useDispatch();
   const backendUri = import.meta.env.VITE_BACKEND_URI;
   const loginWithGoogle = () => {
-    window.open("http://localhost:8000/auth/google/callback", "_self");
+    window.open(`${import.meta.env.VITE_BACKEND_HOST}/auth/google/callback`, "_self");
   };
   const { register, handleSubmit, reset } = useForm();
   const [error, setError] = useState(false);
