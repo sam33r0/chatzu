@@ -2,7 +2,7 @@ import React from 'react'
 
 function Logo() {
   return (
-    <div>Logo</div>
+    <div><img className='rounded-3xl' width="130px" src="./default_logo.png"/> </div>
   )
 }
 

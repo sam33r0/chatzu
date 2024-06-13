@@ -76,12 +76,12 @@ function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <Link to="/" className="hidden md:flex items-center">
-              <img src="/colourLogoTransparent.png" width="80px" alt="ChatZu Logo" />
+            <Link to="/" className="hidden md:flex items-center rounded-2xl">
+              <img className='rounded-3xl' src="/default_logo.png" width="80px" alt="ChatZu Logo" />
             </Link>
 
-            <Link to="/" className="md:hidden flex items-center">
-              <img src="/colourLogoTransparent.png" width="80px" alt="ChatZu Logo" />
+            <Link to="/" className="md:hidden flex items-center rounded-2xl">
+              <img className='rounded-3xl' src="/default_logo.png" width="80px" alt="ChatZu Logo" />
             </Link>
 
 
